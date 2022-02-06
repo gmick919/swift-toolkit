@@ -149,11 +149,109 @@ class LibraryViewController: UIViewController, Loggable {
         let alert = UIAlertController(title: NSLocalizedString("library_add_book_title", comment: "Title for the Add book alert"), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: NSLocalizedString("library_add_book_from_device_button", comment: "`Add a book from your device` button"), style: .default, handler: { _ in self.addBookFromDevice() }))
         alert.addAction(UIAlertAction(title: NSLocalizedString("library_add_book_from_url_button", comment: "`Add a book from a URL` button"), style: .default, handler: { _ in self.addBookFromURL() }))
+      
+        // LingVisSDK...
+        alert.addAction(UIAlertAction(title: "Sign In", style: .default, handler: { _ in self.signIn() }))
+        alert.addAction(UIAlertAction(title: "Sign Up", style: .default, handler: { _ in self.signUp() }))
+        alert.addAction(UIAlertAction(title: "Get Settings", style: .default, handler: { _ in self.getSettings() }))
+        alert.addAction(UIAlertAction(title: "Update Settings", style: .default, handler: { _ in self.updateSettings() }))
+        // ...LingVisSDK
+      
         alert.addAction(UIAlertAction(title: NSLocalizedString("cancel_button", comment: "Cancel adding a book from a URL"), style: .cancel))
         alert.popoverPresentationController?.barButtonItem = addBookButton
         present(alert, animated: true)
     }
     
+    // LingVisSDK...
+    private func signIn() {
+      signInInt(newAccount: false)
+    }
+
+    private func signUp() {
+      signInInt(newAccount: true)
+    }
+    
+    private func signInInt(newAccount: Bool) {
+      let title = newAccount ? "Sign Up" : "Sign In";
+      let message = newAccount ? "create a new account" : "use an existing account";
+      let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        func doIt(_ action: UIAlertAction) {
+            guard let email = alert.textFields?[0].text, let password = alert.textFields?[1].text else
+            {
+                return
+            }
+            LingVisSDK.signIn(email: email, password: password, newAccount: newAccount, completion: { result in
+                switch result {
+                  case .success:
+                    toast("Signed in as " + email, on: self.view, duration: 5)
+                  case .failure(let error):
+                    toast("ERROR: " + error.description, on: self.view, duration: 5)
+                }
+            })
+        }
+        
+        alert.addTextField { textField in
+            textField.placeholder = "Email"
+        }
+        alert.addTextField { textField in
+            textField.placeholder = "Password"
+        }
+        alert.addAction(UIAlertAction(title: title, style: .default, handler: doIt))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func showSettings(res: String) {
+      let parts = res.components(separatedBy: ",")
+      let msg = "Learning language: \(parts[0])\nYour language: \(parts[1])\nYour level: \(parts[2])\nemail: \(parts[3])"
+      let alert = UIAlertController(title: "Settings", message: msg, preferredStyle: UIAlertController.Style.alert)
+      alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+      self.present(alert, animated: true, completion: nil)
+    }
+    
+    private func getSettings() {
+      LingVisSDK.getSettings(completion: { result in
+        switch result {
+          case .success(let res):
+            self.showSettings(res: res)
+          case .failure(let error):
+            toast("ERROR: " + error.description, on: self.view, duration: 5)
+        }
+      })
+    }
+    
+    private func updateSettings() {
+      let alert = UIAlertController(title: "Update Settings", message: "Change any of the settings below, leave empty those you don't want to change", preferredStyle: .alert)
+        func doIt(_ action: UIAlertAction) {
+            guard let l2 = alert.textFields?[0].text,
+                  let l1 = alert.textFields?[1].text,
+                  let level = alert.textFields?[2].text
+            else { return }
+            LingVisSDK.updateSettings(l2: l2, l1: l1, level: level, completion: { result in
+                switch result {
+                  case .success(let res):
+                    self.showSettings(res: res)
+                  case .failure(let error):
+                    toast("ERROR: " + error.description, on: self.view, duration: 5)
+                }
+            })
+        }
+        
+        alert.addTextField { textField in
+            textField.placeholder = "Language you learn"
+        }
+        alert.addTextField { textField in
+            textField.placeholder = "Language to translate to"
+        }
+        alert.addTextField { textField in
+            textField.placeholder = "Your level from 1 to 6 (A1-C2)"
+        }
+        alert.addAction(UIAlertAction(title: "Update", style: .default, handler: doIt))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true, completion: nil)
+    }
+    // ...LingVisSDK
+
     private func addBookFromDevice() {
         var utis = DocumentTypes.main.supportedUTIs
         utis.append(String(kUTTypeText))
