@@ -134,6 +134,10 @@ class ReaderViewController: UIViewController, Loggable {
         navigationBarHidden = !navigationBarHidden
     }
     
+    func hideNavigationBar() { // LingVisSDK
+        navigationBarHidden = true
+    }
+    
     func updateNavigationBar(animated: Bool = true) {
         let hidden = navigationBarHidden && !UIAccessibility.isVoiceOverRunning
         navigationController?.setNavigationBarHidden(hidden, animated: animated)
@@ -350,7 +354,7 @@ extension ReaderViewController: VisualNavigatorDelegate {
             moved = navigator.goRight(animated: false)
         }
         
-        if !moved {
+        if !moved && point.y < 40 { // LingVisSDK
             toggleNavigationBar()
         }
     }

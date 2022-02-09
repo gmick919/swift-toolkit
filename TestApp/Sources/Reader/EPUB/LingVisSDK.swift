@@ -8,6 +8,7 @@ import R2Shared
 
 
 class LingVisSDK: NSObject, WKScriptMessageHandler {
+  private static let defaultLang = "sv"
   private static var app = ""
   private static var token = ""
   private static var gotToken = true
@@ -15,6 +16,7 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
   private static var updating = false
   private static var updatingInternal = false
   private static var clientData = ""
+  public static var onSelect: (() -> Void)? = nil
   public static var willChangeLanguage: ((Publication) -> ChangeLanguageParams)? = nil
   public static var didChangeLanguage: ((Result<String, Error>) -> Void)? = nil
   private var webView: WKWebView
@@ -56,7 +58,7 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
   }
   
   class func getHook(publication: Publication) -> ((_: WKWebView) -> AnyObject)? {
-    var lang = publication.metadata.languages.first ?? ""
+    var lang = publication.metadata.languages.first ?? defaultLang
     lang = lang.components(separatedBy: "-")[0]
     if (lang != "" && lang != currLang) {
       var l1 = ""
@@ -136,6 +138,8 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
       let str = String(msg[idx...])
       let parts = str.components(separatedBy: "|")
       invokeCallback(callbackId: parts[0], arg: parts[1], error: parts[2])
+    } else if msg.starts(with: "onSelect:") {
+        LingVisSDK.onSelect?()
     }
   }
   

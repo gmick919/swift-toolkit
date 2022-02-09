@@ -35,6 +35,8 @@ class EPUBViewController: ReaderViewController {
         super.init(navigator: navigator, publication: publication, bookId: bookId, books: books, bookmarks: bookmarks)
         
         navigator.delegate = self
+      
+        LingVisSDK.onSelect = hideNavigationBar // LingVisSDK
     }
     
     var epubNavigator: EPUBNavigatorViewController {
