@@ -1,17 +1,18 @@
-platform :ios, '10.3.1'
+platform :ios, '13'
+project '../../TestApp.xcodeproj'
 
 target 'TestApp' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/VERSION/Support/CocoaPods/ReadiumShared.podspec'
-  pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/VERSION/Support/CocoaPods/ReadiumStreamer.podspec'
-  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/VERSION/Support/CocoaPods/ReadiumNavigator.podspec'
-  pod 'ReadiumOPDS', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/VERSION/Support/CocoaPods/ReadiumOPDS.podspec'
+  pod 'R2Shared', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumShared.podspec'
+  pod 'R2Streamer', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumStreamer.podspec'
+  pod 'R2Navigator', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumNavigator.podspec'
+  pod 'ReadiumOPDS', podspec: 'https://raw.githubusercontent.com/readium/swift-toolkit/2.2.0/Support/CocoaPods/ReadiumOPDS.podspec'
 
   pod 'GCDWebServer', podspec: 'https://raw.githubusercontent.com/readium/GCDWebServer/3.6.3/GCDWebServer.podspec'
   pod 'GRDB.swift'
-  pod 'Kingfisher'
+  pod 'Kingfisher', '~> 7.0.0'
   pod 'MBProgressHUD'
   pod 'SwiftSoup'
 end
@@ -20,7 +21,7 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
         config.build_settings['SWIFT_VERSION'] = '5.1.4'
-        config.build_settings['ENABLE_BITCODE'] = 'NO'
+        config.build_settings['ENABLE_BITCODE'] = 'YES'
     end
   end
 end
