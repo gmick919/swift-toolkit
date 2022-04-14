@@ -74,26 +74,37 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
         }
       }
       if !proceed { return nil }
-      LingVisSDK.updatingInternal = true
-      LingVisSDK.updateSettings(l2: lang, l1: l1, level: "", completion: { result in
-        LingVisSDK.updatingInternal = false
-        switch result {
-          case .success:
-            LingVisSDK.updating = false
-          case .failure:
-            break
-        }
-        if didChangeLanguage != nil {
-          didChangeLanguage!(result)
-        }
-      })
+      updateLanguage(l2: lang, l1: l1)
     }
     return {
       (webView: WKWebView) -> AnyObject in
         let id = publication.metadata.identifier ?? ""
         let bookId = publication.metadata.title + ":" + id
-      return LingVisSDK(webView: webView, bookId: bookId)
+        return LingVisSDK(webView: webView, bookId: bookId)
     }
+  }
+  
+  private static func updateLanguage(l2: String, l1: String) {
+    LingVisSDK.updating = true
+    if !LingVisSDK.gotToken {
+      DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: {
+        LingVisSDK.updateLanguage(l2: l2, l1: l1)
+      })
+      return
+    }
+    LingVisSDK.updatingInternal = true
+    LingVisSDK.updateSettings(l2: l2, l1: l1, level: "", completion: { result in
+      LingVisSDK.updatingInternal = false
+      switch result {
+        case .success:
+          LingVisSDK.updating = false
+        case .failure:
+          break
+      }
+      if LingVisSDK.didChangeLanguage != nil {
+        LingVisSDK.didChangeLanguage!(result)
+      }
+    })
   }
   
   private func addScript(webView: WKWebView, name: String) -> Void {
@@ -139,7 +150,9 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
       let parts = str.components(separatedBy: "|")
       invokeCallback(callbackId: parts[0], arg: parts[1], error: parts[2])
     } else if msg.starts(with: "onSelect:") {
-        LingVisSDK.onSelect?()
+       LingVisSDK.onSelect?()
+    } else if msg.starts(with: "log:") {
+      print(msg);
     }
   }
   
@@ -198,6 +211,19 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
     main.webView.evaluateJavaScript("lingVisSdk.polyReadiumSignIn('\(callback)', '', '\(escape(str: email))', '\(escape(str: password))', '\(appStr)', '', \(newAccount))")
   }
   
+  class func signOut(completion: @escaping (Result<String, Error>) -> Void) {
+    let main = LingVisSDK._shared!
+    let callback = main.addCallback(callback: {
+      (arg: String, error: String) -> Void in
+      if error.count > 0 {
+        completion(.failure(.customError(message: error)))
+      } else {
+        completion(.success(arg))
+      }
+    })
+    main.webView.evaluateJavaScript("lingVisSdk.polyReadiumSignOut('\(callback)')")
+  }
+
   class func getSettings(completion: @escaping (Result<String, Error>) -> Void) {
     let main = LingVisSDK._shared!
     let callback = main.addCallback(callback: {

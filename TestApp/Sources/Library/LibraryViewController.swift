@@ -153,6 +153,7 @@ class LibraryViewController: UIViewController, Loggable {
         // LingVisSDK...
         alert.addAction(UIAlertAction(title: "Sign In", style: .default, handler: { _ in self.signIn() }))
         alert.addAction(UIAlertAction(title: "Sign Up", style: .default, handler: { _ in self.signUp() }))
+        alert.addAction(UIAlertAction(title: "Sign Out", style: .default, handler: { _ in self.signOut() }))
         alert.addAction(UIAlertAction(title: "Get Settings", style: .default, handler: { _ in self.getSettings() }))
         alert.addAction(UIAlertAction(title: "Update Settings", style: .default, handler: { _ in self.updateSettings() }))
         // ...LingVisSDK
@@ -171,6 +172,17 @@ class LibraryViewController: UIViewController, Loggable {
       signInInt(newAccount: true)
     }
     
+    private func signOut() {
+      LingVisSDK.signOut(completion: { result in
+        switch result {
+          case .success:
+            toast("Signed out", on: self.view, duration: 5)
+          case .failure(let error):
+            toast("ERROR: " + error.description, on: self.view, duration: 5)
+        }
+      })
+    }
+  
     private func signInInt(newAccount: Bool) {
       let title = newAccount ? "Sign Up" : "Sign In";
       let message = newAccount ? "create a new account" : "use an existing account";
