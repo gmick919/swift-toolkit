@@ -39,7 +39,7 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
     get {
       if LingVisSDK._shared == nil {
         let wk = WKWebView()
-        let url = Bundle.main.url(forResource: "poly-core", withExtension: "html", subdirectory: "")!
+        let url = Bundle.main.url(forResource: "lingVisSdk", withExtension: "html", subdirectory: "")!
         wk.loadFileURL(url, allowingReadAccessTo: url)
         LingVisSDK._shared = LingVisSDK(webView: wk, bookId: "")
       }
@@ -52,7 +52,7 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
     self.bookId = bookId
     super.init()
     webView.configuration.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
-    addScript(webView: webView, name: "poly-core")
+    addScript(webView: webView, name: "lingVisSdk")
     let controller = webView.configuration.userContentController
     controller.add(WeakWKScriptMessageHandler(delegate: self), name: "lingVisSDK")
   }
