@@ -1,4 +1,11 @@
-# Readium Swift Toolkit
+# Readium Swift Toolkit with Integrated LingVis SDK
+
+This repository was forked on Feb 6 2002 from https://github.com/readium/swift-toolkit
+It contains the standard Readium sample app with integrated LingVis SDK.
+LingVis SDK repository for iOS with release files and documentation is in https://github.com/Brainglass/lingVis-readium-ios
+The original README before LingVis SDK integration follows below:
+
+# Readium Swift Toolkit 
 
 [Readium Mobile](https://github.com/readium/mobile) is a toolkit for ebooks, audiobooks and comics written in Swift & Kotlin.
 
