@@ -53,7 +53,7 @@ final class AppModule {
         // Set Readium 2's logging minimum level.
         R2EnableLog(withMinimumSeverityLevel: .debug)
       
-        LingVisSDK.prepare(app: "R2TestApp-iOS", clientData: "r2 sample", clientId: "6f2e419a-ce17-4373-b8f1-166692376096") // LingVisSDK
+      LingVisSDK.prepare(clientId: "1e046ac8-ffb9-4f5a-938f-843b28dd9bb5", version: "1.4.x", app: "R2TestApp-iOS", clientData: "r2 sample") // LingVisSDK
         
         library.preloadSamples()
     }

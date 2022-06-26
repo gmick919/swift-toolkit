@@ -9,6 +9,7 @@ import R2Shared
 
 class LingVisSDK: NSObject, WKScriptMessageHandler {
   private static let defaultLang = "sv"
+  private static var version = ""
   private static var app = ""
   private static var token = ""
   private static var gotToken = true
@@ -35,7 +36,8 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
     var proceed = true
   }
   
-  class func prepare(app: String, clientData: String, clientId: String) {
+  class func prepare(clientId: String, version: String, app: String, clientData: String) {
+    LingVisSDK.version = version
     LingVisSDK.app = app
     LingVisSDK.clientData = clientData
     LingVisSDK.clientId = clientId
@@ -60,7 +62,7 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
     self.bookId = bookId
     super.init()
     webView.configuration.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
-    let url = URL(string: "https://sprakkraft.org/lingvis-sdk/readium/1.4.x/")!
+    let url = URL(string: "https://sprakkraft.org/lingvis-sdk/readium/\(LingVisSDK.version)")!
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
       guard data != nil else { return }
       let script = String(data: data!, encoding: .utf8)!
