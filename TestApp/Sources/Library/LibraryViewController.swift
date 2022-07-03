@@ -192,7 +192,7 @@ class LibraryViewController: UIViewController, Loggable {
             {
                 return
             }
-            let key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjZmMmU0MTlhLWNlMTctNDM3My1iOGYxLTE2NjY5MjM3NjA5NiIsImVtYWlsIjoid2ViLXNhbXBsZS5ib2d1c0BzcHJha2tyYWZ0LmNvbSIsImlhdCI6MTY1NTY2ODczMX0.KXElH45KkfkFubC8HR7OiblNPPX7tjz4hGcjies6knc"
+            let key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRJZCI6IjQwYzc2Y2RhLWJkOWItNGI2Yy1hYWZkLTEzN2IxODdiZWRmNCIsImVtYWlsIjoid2ViLXNhbXBsZS5ib2d1c0BzcHJha2tyYWZ0LmNvbSIsImlhdCI6MTY1NDQ0NzAxMn0.0kFpW3-HMRgVYJ-QxQ8wZQ8WderpKGjBHmah2ynmNRs"
             func onExpired(refresh: (String) -> Void) {
                 refresh(key)
             }
