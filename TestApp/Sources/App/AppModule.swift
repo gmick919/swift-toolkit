@@ -53,9 +53,13 @@ final class AppModule {
         // Set Readium 2's logging minimum level.
         R2EnableLog(withMinimumSeverityLevel: .debug)
       
-        let testClientId = "367ebb09-57e9-4129-bae6-083d2d7b838e"
-        let testClientIdSecure = "40c76cda-bd9b-4b6c-aafd-137b187bedf4"
-        LingVisSDK.prepare(clientId: testClientIdSecure, version: "1.4.x", app: "R2TestApp-iOS", clientData: "r2 sample") // LingVisSDK
+        // LingVisSDK...
+        // These two client ids are used only for demo, testing and debug.
+        // Don't use them in production. Use the client ids assigned to your applications by Språkkraft.
+        let testClientId = "367ebb09-57e9-4129-bae6-083d2d7b838e" // not secure: clientKey and onExpired arguments are ignored
+        let testClientIdSecure = "40c76cda-bd9b-4b6c-aafd-137b187bedf4" // secure: clientKey is used to authorize the user, onExpired is used to automatically re-authorize the user after the previous authorization expires (after about 24 hours)
+        LingVisSDK.prepare(clientId: testClientId, version: "1.4.x", app: "R2TestApp-iOS", clientData: "r2 sample")
+        //...LingVisSDK
         
         library.preloadSamples()
     }
