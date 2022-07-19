@@ -49,8 +49,19 @@ class LingVisSDK: NSObject, WKScriptMessageHandler {
     get {
       if LingVisSDK._shared == nil {
         let wk = WKWebView()
-        let url = Bundle.main.url(forResource: "lingVisSdk", withExtension: "html", subdirectory: "")!
-        wk.loadFileURL(url, allowingReadAccessTo: url)
+        wk.loadHTMLString(
+          """
+            <html>
+                <head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                      <script>
+                        window.readium = {};
+                      </script>
+                </head>
+                <body>
+                </body>
+            </html>
+          """, baseURL: Bundle.main.bundleURL)
         LingVisSDK._shared = LingVisSDK(webView: wk, bookId: "")
       }
       return LingVisSDK._shared!
