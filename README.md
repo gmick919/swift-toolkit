@@ -1,4 +1,4 @@
-# Readium Swift Toolkit with Integrated LingVis SDK
+# Readium Swift Toolkit with Integrated LingVis SDK 1.4.11
 
 This repository was forked on Feb 6 2002 from https://github.com/readium/swift-toolkit
 It contains the standard Readium sample app with integrated LingVis SDK.
